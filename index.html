@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Professional Resume Builder</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter :wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background-color: #f9fafb;
+      color: #333;
+    }
+
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 1rem;
+      gap: 2rem;
+    }
+
+    .form-section, .resume-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+      flex: 1;
+      min-width: 300px;
+    }
+
+    h2, .section-title {
+      color: #1f2937;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+      font-size: 0.95rem;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid #d1d5db;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      transition: border-color 0.3s ease;
+    }
+
+    input:focus, textarea:focus {
+      border-color: #3b82f6;
+      outline: none;
+    }
+
+    .photo-preview img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 10px;
+      max-height: 200px;
+      object-fit: cover;
+    }
+
+    button {
+      background-color: #3b82f6;
+      color: white;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      cursor: pointer;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      margin-right: 10px;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    /* Resume Section */
+    .resume-header {
+      text-align: center;
+      border-bottom: 1px solid #e5e7eb;
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .resume-header h1 {
+      font-size: 2rem;
+      margin: 0;
+      color: #111827;
+    }
+
+    .resume-photo {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .resume-photo img {
+      width: 120px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 50%;
+      border: 3px solid #e5e7eb;
+    }
+
+    .section {
+      margin-top: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 0.3rem;
+      margin-bottom: 0.7rem;
+    }
+
+    ul#outputSkills {
+      list-style-type: disc;
+      padding-left: 1.2rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Input Form -->
+  <div class="form-section">
+    <h2>Enter Your Details</h2>
+    <form id="resumeForm">
+      <label>Name</label>
+      <input type="text" id="name" placeholder="John Doe">
+
+      <label>Email</label>
+      <input type="email" id="email" placeholder="john@example.com">
+
+      <label>Phone</label>
+      <input type="tel" id="phone" placeholder="+1 234 567 8900">
+
+      <label>Address</label>
+      <textarea id="address" rows="2" placeholder="123 Street, City, Country"></textarea>
+
+      <label>Photo</label>
+      <input type="file" id="photo" accept="image/*">
+      <div class="photo-preview">
+        <img id="photoPreview" src="" alt="Preview" style="display:none;">
+      </div>
+
+      <label>Professional Summary</label>
+      <textarea id="summary" rows="4" placeholder="A brief summary of your professional experience..."></textarea>
+
+      <label>Experience</label>
+      <textarea id="experience" rows="6" placeholder="Job Title at Company - Years | Responsibilities & Achievements"></textarea>
+
+      <label>Education</label>
+      <textarea id="education" rows="4" placeholder="Degree, University - Year Graduated"></textarea>
+
+      <label>Skills</label>
+      <textarea id="skills" rows="3" placeholder="Skill 1, Skill 2, Skill 3"></textarea>
+
+      <button type="button" onclick="generateResume()">Generate Resume</button>
+      <button type="button" onclick="window.print()">Print Resume</button>
+      <button type="button" onclick="downloadPDF()">Download as PDF</button>
+    </form>
+  </div>
+
+  <!-- Resume Preview -->
+  <div class="resume-section" id="resumeOutput">
+    <div class="resume-photo">
+      <img id="outputPhoto" src="" alt="User Photo" style="display:none;">
+    </div>
+
+    <div class="resume-header">
+      <h1 id="outputName">John Doe</h1>
+      <p><strong>Email:</strong> <span id="outputEmail">john@example.com</span></p>
+      <p><strong>Phone:</strong> <span id="outputPhone">+1 234 567 8900</span></p>
+      <p><strong>Address:</strong> <span id="outputAddress">123 Street, City, Country</span></p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Professional Summary</div>
+      <p id="outputSummary">A brief summary of your professional experience...</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Experience</div>
+      <p id="outputExperience">Job Title at Company - Years | Responsibilities & Achievements</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Education</div>
+      <p id="outputEducation">Degree, University - Year Graduated</p>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Skills</div>
+      <ul id="outputSkills">
+        <li>Skill 1</li>
+        <li>Skill 2</li>
+        <li>Skill 3</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Include html2pdf.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js "
+        integrity="sha512-GsLHcYVTQz8JXMZygcdpdWgUw9cKjmwkUVe0uixLEh0zDsOVVniJKP+IEcxbXnSDeGKLPEjDLmFLOaMAZYq1ehxg=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+  function generateResume() {
+    document.getElementById("outputName").innerText = document.getElementById("name").value || "John Doe";
+    document.getElementById("outputEmail").innerText = document.getElementById("email").value || "john@example.com";
+    document.getElementById("outputPhone").innerText = document.getElementById("phone").value || "+1 234 567 8900";
+    document.getElementById("outputAddress").innerText = document.getElementById("address").value || "123 Street, City, Country";
+
+    document.getElementById("outputSummary").innerText = document.getElementById("summary").value || "A brief summary of your professional experience...";
+    document.getElementById("outputExperience").innerText = document.getElementById("experience").value || "Job Title at Company - Years | Responsibilities & Achievements";
+    document.getElementById("outputEducation").innerText = document.getElementById("education").value || "Degree, University - Year Graduated";
+
+    const skillsInput = document.getElementById("skills").value || "Skill 1, Skill 2, Skill 3";
+    const skillsList = skillsInput.split(',').map(skill => skill.trim()).filter(skill => skill !== "");
+    const skillsHtml = skillsList.map(skill => `<li>${skill}</li>`).join('');
+    document.getElementById("outputSkills").innerHTML = skillsHtml;
+
+    // Handle photo upload
+    const fileInput = document.getElementById('photo');
+    if (fileInput.files && fileInput.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const output = document.getElementById('outputPhoto');
+        output.src = e.target.result;
+        output.style.display = 'block';
+      };
+      reader.readAsDataURL(fileInput.files[0]);
+    } else {
+      document.getElementById('outputPhoto').style.display = 'none';
+    }
+  }
+
+  function downloadPDF() {
+    const element = document.getElementById('resumeOutput');
+    const opt = {
+      margin:       0.5,
+      filename:     'resume.pdf',
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2 },
+      jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(element).save();
+  }
+
+  // Optional: Show preview after selecting image
+  document.getElementById('photo').addEventListener('change', function () {
+    const file = this.files[0];
+    const preview = document.getElementById('photoPreview');
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        preview.src = e.target.result;
+        preview.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    } else {
+      preview.style.display = 'none';
+    }
+  });
+</script>
+
+</body>
+</html>
